@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\DifferentNameLetter;
 use App\Models\Family;
 use App\Models\MaritalStatusLetter;
 use App\Models\Request;
@@ -402,6 +403,22 @@ class AdminRequestComponent extends Component
 
 
                 break;
+            case 10: // domicille Letter
+                $this->formFields = [
+                    ['name' => 'nik', 'type' => 'text', 'label' => 'NIK', 'placeholder' => 'Masukkan NIK'],
+                    ['name' => 'name', 'type' => 'text', 'label' => 'Nama', 'placeholder' => 'Masukkan nama'],
+                    ['name' => 'same_name', 'type' => 'text', 'label' => 'Nama Yang Sama', 'placeholder' => 'Masukkan nama sama'],
+                    ['name' => 'gender', 'type' => 'select', 'label' => 'Jenis Kelamin', 'options' => ['Laki-laki', 'Perempuan']],
+                    ['name' => 'birth_place', 'type' => 'text', 'label' => 'Tempat Lahir', 'placeholder' => 'Masukkan tempat lahir'],
+                    ['name' => 'birth_date', 'type' => 'date', 'label' => 'Tanggal Lahir', 'placeholder' => 'Pilih tanggal lahir'],
+                    ['name' => 'nationality', 'type' => 'text', 'label' => 'Kewarganegaraan', 'placeholder' => 'Masukkan kewarganegaraan'],
+                    ['name' => 'religion', 'type' => 'text', 'label' => 'Agama', 'placeholder' => 'Masukkan agama'],
+                    ['name' => 'occupation', 'type' => 'text', 'label' => 'Pekerjaan', 'placeholder' => 'Masukkan pekerjaan'],
+                    ['name' => 'address', 'type' => 'textarea', 'label' => 'Alamat', 'placeholder' => 'Masukkan alamat'],
+                ];
+
+
+                break;
 
             default:
                 $this->formFields = [];
@@ -504,6 +521,8 @@ class AdminRequestComponent extends Component
             SingleStatusLetter::create($data);
         } elseif ($this->type_letter_id == 9) {
             MaritalStatusLetter::create($data);
+        } elseif ($this->type_letter_id == 10) {
+            DifferentNameLetter::create($data);
         }
 
 
@@ -540,7 +559,7 @@ class AdminRequestComponent extends Component
     public function render()
     {
         return view('livewire.admin.admin-request-component', [
-            'typeLetters' => TypeLetter::whereIn('id', [1, 2, 3, 4, 5, 6, 7, 8, 9])->get(),
+            'typeLetters' => TypeLetter::whereIn('id', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->get(),
         ]);
     }
 }

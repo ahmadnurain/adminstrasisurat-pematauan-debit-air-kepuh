@@ -6,8 +6,10 @@ use App\Http\Controllers\Admin\DomicileController;
 use App\Livewire\Admin\AdminRequestComponent;
 use App\Livewire\Admin\Letter\BirthLetter;
 use App\Livewire\Admin\Letter\BusinessLetter;
+use App\Livewire\Admin\Letter\DifferentNameLetter;
 use App\Livewire\Admin\Letter\EditBirthLetter;
 use App\Livewire\Admin\Letter\EditBusinessLetter;
+use App\Livewire\Admin\Letter\EditDifferentNameLetter;
 use App\Livewire\Admin\Letter\EditDomicile;
 use App\Livewire\Admin\Letter\EditIncomeLetter;
 use App\Livewire\Admin\Letter\EditMaritalStatusLetter;
@@ -44,6 +46,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/income-letter/{id}/download', [IncomeLetter::class, 'downloadPDF'])->name('income-letter.download');
     Route::get('/single-status-letter/{id}/download', [SingleStatusLetter::class, 'downloadPDF'])->name('single-status-letter.download');
     Route::get('/marital-status-letter/{id}/download', [MaritalStatusLetter::class, 'downloadPDF'])->name('marital-status-letter.download');
+    Route::get('/different-name-letter/{id}/download', [DifferentNameLetter::class, 'downloadPDF'])->name('different-name-letter.download');
 
 
     Route::get('/birth-letter/{id}/preview', [BirthLetter::class, 'streamPDF'])->name('birth-letter.streamPDF');
@@ -55,6 +58,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/income-letter/{id}/preview', [IncomeLetter::class, 'streamPDF'])->name('income-letter.streamPDF');
     Route::get('/single-status-letter/{id}/preview', [SingleStatusLetter::class, 'streamPDF'])->name('single-status-letter.streamPDF');
     Route::get('/marital-status-letter/{id}/preview', [MaritalStatusLetter::class, 'streamPDF'])->name('marital-status-letter.streamPDF');
+    Route::get('/different-name-letter/{id}/preview', [DifferentNameLetter::class, 'streamPDF'])->name('different-name-letter.streamPDF');
 
     Route::get('/domicile-letter', Domicile::class)->name('domicile-letter');
     Route::get('/domicile-letter/edit/{id}', EditDomicile::class)->name('domicile.edit');
@@ -68,6 +72,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/income-letter/edit/{id}',  EditIncomeLetter::class)->name('income-letter.edit');
     Route::get('/single-status-letter/edit/{id}',  EditSingleStatusLetter::class)->name('single-status-letter.edit');
     Route::get('/marital-status-letter/edit/{id}',  EditMaritalStatusLetter::class)->name('marital-status-letter.edit');
+    Route::get('/different-name-letter/edit/{id}',  EditDifferentNameLetter::class)->name('different-name-letter.edit');
 
 
     Route::get('/bussines-letter', BusinessLetter::class)->name('bussines-letter');
@@ -76,6 +81,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/income-letter', IncomeLetter::class)->name('income-letter');
     Route::get('/single-status-letter', SingleStatusLetter::class)->name('single-status-letter');
     Route::get('/marital-status-letter', MaritalStatusLetter::class)->name('marital-status-letter');
+    Route::get('/different-name-letter', DifferentNameLetter::class)->name('different-name-letter');
     Route::get('/water-debit', WaterDebit::class)->name('water');
 });
 

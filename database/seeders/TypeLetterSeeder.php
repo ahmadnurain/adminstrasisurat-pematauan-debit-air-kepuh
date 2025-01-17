@@ -23,6 +23,7 @@ class TypeLetterSeeder extends Seeder
             ['name' => 'Surat Pendapatan'],
             ['name' => 'Surat Keterangan Belum Menikah'],
             ['name' => 'Surat Keterangan Janda/Duda'],
+            ['name' => 'Surat Keterangan Beda Nama'],
 
         ];
 

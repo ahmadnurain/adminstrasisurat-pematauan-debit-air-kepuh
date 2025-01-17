@@ -9,16 +9,17 @@ class DifferentNameLetter extends Model
 {
     protected $fillable = [
         'request_id',
-        'number_letter',
+        'nik',
         'name',
+        'same_name',
+        'gender',
         'birth_place',
         'birth_date',
+        'nationality',
+        'religion',
         'address',
-        'document_name',
-        'family_card_number',
-        'same_name',
-        'same_address',
-        'same_document'
+        'occupation',
+        'number_letter'
     ];
 
     public function request(): BelongsTo
