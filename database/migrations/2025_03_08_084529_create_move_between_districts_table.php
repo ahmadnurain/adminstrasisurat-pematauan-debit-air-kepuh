@@ -1,0 +1,73 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('move_between_districts', function (Blueprint $table) {
+            $table->id();
+            $table->string('province');
+            $table->string('province_code');
+            $table->string('regency');
+            $table->string('regency_code');
+            $table->string('district');
+            $table->string('district_code');
+            $table->string('village');
+            $table->string('village_code');
+            $table->string('hamlet')->nullable();
+
+            // Origin details
+            $table->string('origin_family_card_number');
+            $table->string('origin_head_of_family_name');
+            $table->text('origin_address');
+            $table->string('origin_rt');
+            $table->string('origin_rw');
+            $table->string('origin_hamlet')->nullable();
+            $table->string('origin_village');
+            $table->string('origin_district');
+            $table->string('origin_regency');
+            $table->string('origin_province');
+            $table->string('origin_postal_code');
+            $table->string('origin_phone')->nullable();
+
+            // Applicant details
+            $table->string('applicant_nik')->unique();
+            $table->string('applicant_full_name');
+            $table->string('moving_reason');
+
+            // Destination details
+            $table->text('destination_address');
+            $table->string('destination_rt');
+            $table->string('destination_rw');
+            $table->string('destination_hamlet')->nullable();
+            $table->string('destination_village');
+            $table->string('destination_district');
+            $table->string('destination_regency');
+            $table->string('destination_province');
+            $table->string('destination_postal_code');
+            $table->string('destination_phone')->nullable();
+
+            // Move type and family card status
+            $table->string('moving_type');
+            $table->string('kk_status_not_moving');
+            $table->string('kk_status_moving');
+
+            $table->timestamps(); // Created_at and updated_at
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('move_between_districts');
+    }
+};

@@ -24,6 +24,10 @@ class TypeLetterSeeder extends Seeder
             ['name' => 'Surat Keterangan Belum Menikah'],
             ['name' => 'Surat Keterangan Janda/Duda'],
             ['name' => 'Surat Keterangan Beda Nama'],
+            ['name' => 'Surat Keterangan Kematian'],
+            ['name' => 'Surat Keterangan Pindah Antar Desa'],
+            ['name' => 'Surat Keterangan Pindah Antar Kecamatan'],
+            ['name' => 'Surat Keterangan Pindah Antar Kabupaten'],
 
         ];
 
