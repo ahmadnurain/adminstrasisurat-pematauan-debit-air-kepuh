@@ -14,6 +14,8 @@ class MoveBetweenDistricts extends Model
     protected $table = 'move_between_sub_districts';
 
     protected $fillable = [
+        'request_id',
+        'number_letter',
         'province',
         'province_code',
         'regency',

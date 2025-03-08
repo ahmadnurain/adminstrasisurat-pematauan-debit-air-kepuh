@@ -13,6 +13,8 @@ class MovingBetweenVillages extends Model
     protected $table = 'moving_between_villages';
 
     protected $fillable = [
+        'request_id',
+        'number_letter',
         'province',
         'province_code',
         'regency',

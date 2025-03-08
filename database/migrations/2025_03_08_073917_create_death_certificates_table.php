@@ -9,9 +9,10 @@ return new class extends Migration {
     {
         Schema::create('death_certificates', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('request_id')->constrained();
+            $table->string('number_letter')->nullable();
             $table->string('head_of_family_name');
             $table->string('head_of_family_number');
-
             $table->string('deceased_nik');
             $table->string('deceased_full_name');
             $table->string('deceased_gender');

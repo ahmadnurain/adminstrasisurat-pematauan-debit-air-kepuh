@@ -13,6 +13,8 @@ class DeathCertificate extends Model
     protected $table = 'death_certificates';
 
     protected $fillable = [
+        'request_id',
+        'number_letter',
         'head_of_family_name',
         'head_of_family_number',
         'deceased_nik',

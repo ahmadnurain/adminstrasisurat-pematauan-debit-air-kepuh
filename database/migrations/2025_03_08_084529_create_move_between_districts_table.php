@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('move_between_districts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('request_id')->constrained();
+            $table->string('number_letter')->nullable();
             $table->string('province');
             $table->string('province_code');
             $table->string('regency');
