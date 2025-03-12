@@ -13,9 +13,11 @@ use App\Livewire\Admin\Letter\EditDifferentNameLetter;
 use App\Livewire\Admin\Letter\EditDomicile;
 use App\Livewire\Admin\Letter\EditIncomeLetter;
 use App\Livewire\Admin\Letter\EditMaritalStatusLetter;
+use App\Livewire\Admin\Letter\EditMovingBetweenVillages;
 use App\Livewire\Admin\Letter\EditMovingComesOneVillage;
 use App\Livewire\Admin\Letter\EditSingleStatusLetter;
 use App\Livewire\Admin\Letter\MaritalStatusLetter;
+use App\Livewire\Admin\Letter\MovingBetweenVillages;
 use App\Livewire\Admin\Letter\MovingComesOneVillage;
 use App\Livewire\Admin\Letter\Poverty;
 use App\Livewire\Admin\Letter\SingleStatusLetter;
@@ -47,6 +49,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/single-status-letter/{id}/download', [SingleStatusLetter::class, 'downloadPDF'])->name('single-status-letter.download');
     Route::get('/marital-status-letter/{id}/download', [MaritalStatusLetter::class, 'downloadPDF'])->name('marital-status-letter.download');
     Route::get('/different-name-letter/{id}/download', [DifferentNameLetter::class, 'downloadPDF'])->name('different-name-letter.download');
+    Route::get('/moving-between-villages/{id}/download', [MovingBetweenVillages::class, 'downloadPDF'])->name('moving-between-villages.download');
 
 
     Route::get('/birth-letter/{id}/preview', [BirthLetter::class, 'streamPDF'])->name('birth-letter.streamPDF');
@@ -59,6 +62,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/single-status-letter/{id}/preview', [SingleStatusLetter::class, 'streamPDF'])->name('single-status-letter.streamPDF');
     Route::get('/marital-status-letter/{id}/preview', [MaritalStatusLetter::class, 'streamPDF'])->name('marital-status-letter.streamPDF');
     Route::get('/different-name-letter/{id}/preview', [DifferentNameLetter::class, 'streamPDF'])->name('different-name-letter.streamPDF');
+    Route::get('/moving-between-villages/{id}/preview', [MovingBetweenVillages::class, 'streamPDF'])->name('moving-between-villages.streamPDF');
 
     Route::get('/domicile-letter', Domicile::class)->name('domicile-letter');
     Route::get('/domicile-letter/edit/{id}', EditDomicile::class)->name('domicile.edit');
@@ -73,6 +77,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/single-status-letter/edit/{id}',  EditSingleStatusLetter::class)->name('single-status-letter.edit');
     Route::get('/marital-status-letter/edit/{id}',  EditMaritalStatusLetter::class)->name('marital-status-letter.edit');
     Route::get('/different-name-letter/edit/{id}',  EditDifferentNameLetter::class)->name('different-name-letter.edit');
+    Route::get('/moving-between-villages/edit/{id}',  EditMovingBetweenVillages::class)->name('moving-between-villages.edit');
 
 
     Route::get('/bussines-letter', BusinessLetter::class)->name('bussines-letter');
@@ -82,6 +87,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/single-status-letter', SingleStatusLetter::class)->name('single-status-letter');
     Route::get('/marital-status-letter', MaritalStatusLetter::class)->name('marital-status-letter');
     Route::get('/different-name-letter', DifferentNameLetter::class)->name('different-name-letter');
+    Route::get('/moving-between-villages', MovingBetweenVillages::class)->name('moving-between-villages');
     Route::get('/water-debit', WaterDebit::class)->name('water');
 });
 

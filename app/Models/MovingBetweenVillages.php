@@ -15,15 +15,7 @@ class MovingBetweenVillages extends Model
     protected $fillable = [
         'request_id',
         'number_letter',
-        'province',
-        'province_code',
-        'regency',
-        'regency_code',
-        'district',
-        'district_code',
-        'village',
-        'village_code',
-        'hamlet',
+
         'origin_family_card_number',
         'origin_head_of_family_name',
         'origin_address',

@@ -83,7 +83,7 @@ class MovingComesOneVillage extends Component
             ->setOption('isHtml5ParserEnabled', true) // Optional settings
             ->setOption('isRemoteEnabled', true);     // Allow loading external CSS/JS (optional)
 
-        $namaSurat = Str::slug($MovingComesInOneVillageLetter->name);
+        $namaSurat = Str::slug($MovingComesInOneVillageLetter->applicant_full_name);
 
         // Return the PDF as a download
         $pdfFileName = "Surat Pindah Datang Dalam Satu Desa | {$namaSurat}.pdf";
@@ -107,7 +107,7 @@ class MovingComesOneVillage extends Component
             ->setOption('isHtml5ParserEnabled', true) // Optional settings
             ->setOption('isRemoteEnabled', true);     // Allow loading external CSS/JS (optional)
 
-        $namaSurat = Str::slug($MovingComesInOneVillageLetter->name);
+        $namaSurat = Str::slug($MovingComesInOneVillageLetter->applicant_full_name);
 
         // Save the PDF to a specific directory
         $pdfFileName = "Surat-Pindah-Datang-Dalam-Satu-Desa-{$namaSurat}.pdf";

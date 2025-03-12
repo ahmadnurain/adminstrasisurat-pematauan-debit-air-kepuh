@@ -15,15 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('request_id')->constrained();
             $table->string('number_letter')->nullable();
-            $table->string('province');
-            $table->string('province_code');
-            $table->string('regency');
-            $table->string('regency_code');
-            $table->string('district');
-            $table->string('district_code');
-            $table->string('village');
-            $table->string('village_code');
-            $table->string('hamlet')->nullable();
+
 
             // Origin details
             $table->string('origin_family_card_number');
@@ -40,7 +32,7 @@ return new class extends Migration
             $table->string('origin_phone')->nullable();
 
             // Applicant details
-            $table->string('applicant_nik')->unique();
+            $table->string('applicant_nik');
             $table->string('applicant_full_name');
             $table->string('moving_reason');
 

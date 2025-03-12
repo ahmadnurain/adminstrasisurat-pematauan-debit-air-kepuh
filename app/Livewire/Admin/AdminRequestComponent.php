@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\DifferentNameLetter;
 use App\Models\Family;
 use App\Models\MaritalStatusLetter;
+use App\Models\MovingBetweenVillages;
 use App\Models\Request;
 use Livewire\Component;
 use App\Models\TypeLetter;
@@ -69,6 +70,9 @@ class AdminRequestComponent extends Component
             'readonly' => true,
         ],
     ];
+    public $moving_reason;
+    public $moving_reason_other;
+
 
     #[Layout('layouts.admin')]
     #[Title('Ajukan Permintaan Surat')]
@@ -419,6 +423,49 @@ class AdminRequestComponent extends Component
 
 
                 break;
+            case 12: // domicille Letter
+                $this->formFields = [
+                    // General location details
+
+                    // Origin details
+                    ['name' => 'origin_family_card_number', 'type' => 'number', 'label' => 'Nomor Kartu Keluarga Asal', 'placeholder' => 'Masukkan nomor kartu keluarga asal'],
+                    ['name' => 'origin_head_of_family_name', 'type' => 'text', 'label' => 'Nama Kepala Keluarga Asal', 'placeholder' => 'Masukkan nama kepala keluarga asal'],
+                    ['name' => 'origin_address', 'type' => 'textarea', 'label' => 'Alamat Asal', 'placeholder' => 'Masukkan alamat asal lengkap'],
+                    ['name' => 'origin_rt', 'type' => 'number', 'label' => 'RT Asal', 'placeholder' => 'Masukkan RT asal'],
+                    ['name' => 'origin_rw', 'type' => 'number', 'label' => 'RW Asal', 'placeholder' => 'Masukkan RW asal'],
+                    ['name' => 'origin_hamlet', 'type' => 'text', 'label' => 'Dusun Asal', 'placeholder' => 'Masukkan dusun asal', 'nullable' => true],
+                    ['name' => 'origin_village', 'type' => 'text', 'label' => 'Desa Asal', 'placeholder' => 'Masukkan desa asal'],
+                    ['name' => 'origin_district', 'type' => 'text', 'label' => 'Kecamatan Asal', 'placeholder' => 'Masukkan kecamatan asal'],
+                    ['name' => 'origin_regency', 'type' => 'text', 'label' => 'Kabupaten Asal', 'placeholder' => 'Masukkan kabupaten asal'],
+                    ['name' => 'origin_province', 'type' => 'text', 'label' => 'Provinsi Asal', 'placeholder' => 'Masukkan provinsi asal'],
+                    ['name' => 'origin_postal_code', 'type' => 'number', 'label' => 'Kode Pos Asal', 'placeholder' => 'Masukkan kode pos asal'],
+                    ['name' => 'origin_phone', 'type' => 'number', 'label' => 'Telepon Asal', 'placeholder' => 'Masukkan nomor telepon asal', 'nullable' => true],
+
+                    // Applicant details
+                    ['name' => 'applicant_nik', 'type' => 'number', 'label' => 'NIK Pemohon', 'placeholder' => 'Masukkan NIK pemohon', 'unique' => true],
+                    ['name' => 'applicant_full_name', 'type' => 'text', 'label' => 'Nama Lengkap Pemohon', 'placeholder' => 'Masukkan nama lengkap pemohon'],
+
+
+                    // Destination details
+                    ['name' => 'destination_address', 'type' => 'textarea', 'label' => 'Alamat Tujuan', 'placeholder' => 'Masukkan alamat tujuan lengkap'],
+                    ['name' => 'destination_rt', 'type' => 'number', 'label' => 'RT Tujuan', 'placeholder' => 'Masukkan RT tujuan'],
+                    ['name' => 'destination_rw', 'type' => 'number', 'label' => 'RW Tujuan', 'placeholder' => 'Masukkan RW tujuan'],
+                    ['name' => 'destination_hamlet', 'type' => 'text', 'label' => 'Dusun Tujuan', 'placeholder' => 'Masukkan dusun tujuan', 'nullable' => true],
+                    ['name' => 'destination_village', 'type' => 'text', 'label' => 'Desa Tujuan', 'placeholder' => 'Masukkan desa tujuan'],
+                    ['name' => 'destination_district', 'type' => 'text', 'label' => 'Kecamatan Tujuan', 'placeholder' => 'Masukkan kecamatan tujuan'],
+                    ['name' => 'destination_regency', 'type' => 'text', 'label' => 'Kabupaten Tujuan', 'placeholder' => 'Masukkan kabupaten tujuan'],
+                    ['name' => 'destination_province', 'type' => 'text', 'label' => 'Provinsi Tujuan', 'placeholder' => 'Masukkan provinsi tujuan'],
+                    ['name' => 'destination_postal_code', 'type' => 'number', 'label' => 'Kode Pos Tujuan', 'placeholder' => 'Masukkan kode pos tujuan'],
+                    ['name' => 'destination_phone', 'type' => 'number', 'label' => 'Telepon Tujuan', 'placeholder' => 'Masukkan nomor telepon tujuan', 'nullable' => true],
+
+                    // Move type and family card status
+                    ['name' => 'moving_type', 'type' => 'text', 'label' => 'Jenis Kepindahan', 'placeholder' => 'Masukkan jenis kepindahan'],
+                    ['name' => 'kk_status_not_moving', 'type' => 'text', 'label' => 'Status KK Tidak Pindah', 'placeholder' => 'Masukkan status KK tidak pindah'],
+                    ['name' => 'kk_status_moving', 'type' => 'select', 'label' => 'Status KK Pindah', 'options' => ['Numpang KK', 'Membuat KK Baru', 'Nomor KK Tetap']],
+                ];
+
+
+                break;
 
             default:
                 $this->formFields = [];
@@ -467,6 +514,7 @@ class AdminRequestComponent extends Component
             'image_selfie' => $selfiePath,
             'request_status_id' => 1,
         ]);
+
 
         $data = array_merge($this->formFieldsValues, [
             'user_id' => Auth::id(),
@@ -524,6 +572,28 @@ class AdminRequestComponent extends Component
         } elseif ($this->type_letter_id == 10) {
             DifferentNameLetter::create($data);
         }
+        if ($this->type_letter_id == 12) {
+            // Jika user memilih 'Lainnya', gunakan moving_reason_other
+            if ($this->moving_reason === 'Lainnya') {
+                $data['moving_reason'] = $this->moving_reason_other;
+            } else {
+                $data['moving_reason'] = $this->moving_reason;
+            }
+
+            MovingBetweenVillages::create($data);
+
+            // Create family members associated with this request
+            foreach ($this->familyMembers as $familyMember) {
+                Family::create([
+                    'request_id' => $request->id,
+                    'nik' => $familyMember['nik'],
+                    'name' => $familyMember['name'],
+                    'ktp_expiry' => $familyMember['ktp_expiry'],
+                    'shdk' => $familyMember['shdk'],
+                ]);
+            }
+        }
+
 
 
 
@@ -559,7 +629,7 @@ class AdminRequestComponent extends Component
     public function render()
     {
         return view('livewire.admin.admin-request-component', [
-            'typeLetters' => TypeLetter::whereIn('id', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->get(),
+            'typeLetters' => TypeLetter::whereIn('id', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12])->get(),
         ]);
     }
 }

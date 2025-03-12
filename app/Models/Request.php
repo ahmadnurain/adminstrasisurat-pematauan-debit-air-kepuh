@@ -79,4 +79,8 @@ class Request extends Model
     {
         return $this->hasOne(MovingComesInOneVillage::class, 'request_id', 'id');
     }
+    public function movingBetweenVillages()
+    {
+        return $this->hasOne(MovingBetweenVillages::class, 'request_id', 'id');
+    }
 }

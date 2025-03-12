@@ -25,4 +25,8 @@ class Family extends Model
     {
         return $this->belongsTo(MovingComesInOneVillage::class, 'request_id');  // Satu keluarga hanya bisa memiliki satu surat pindah datang satu desa
     }
+    public function movingBetweenVillages()
+    {
+        return $this->belongsTo(MovingBetweenVillages::class, 'request_id');  // Satu keluarga hanya bisa memiliki satu surat pindah datang satu desa
+    }
 }

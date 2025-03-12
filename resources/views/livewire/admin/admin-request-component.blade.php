@@ -99,10 +99,40 @@
                 @endif
 
 
+                @if ($type_letter_id == 12)
+                    <div class="">
+
+                        <!-- Pilihan Alasan -->
+                        <div class="mb-4">
+                            <label for="moving_reason" class="block text-sm font-medium text-gray-700">Alasan
+                                Pindah</label>
+                            <select wire:model.live="moving_reason" id="moving_reason"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">-- Pilih Alasan --</option>
+                                <option value="Numpang KK">Numpang KK</option>
+                                <option value="Membuat KK Baru">Membuat KK Baru</option>
+                                <option value="Nomor KK Tetap">Nomor KK Tetap</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+
+                        <!-- Input Tambahan Jika Alasan "Lainnya" Dipilih -->
+                        @if ($moving_reason === 'Lainnya')
+                            <div class="mb-4">
+                                <label for="moving_reason_other" class="block text-sm font-medium text-gray-700">
+                                    Alasan Pindah (Lainnya)
+                                </label>
+                                <input type="text" wire:model="moving_reason_other" id="moving_reason_other"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    placeholder="Masukkan alasan pindah lainnya">
+                            </div>
+                        @endif
+                    </div>
+                @endif
 
 
                 <!-- Tambah Anggota Keluarga untuk Surat Pindah (Type Letter ID 2) -->
-                @if ($type_letter_id == 2)
+                @if ($type_letter_id == 2 || $type_letter_id == 12)
                     <div class="mt-6 border-t pt-4">
                         <h3 class="text-lg font-semibold mb-4">Tambah Anggota Keluarga</h3>
 
@@ -142,8 +172,10 @@
                                         <div class="flex justify-between items-center bg-gray-100 p-3 rounded-md">
                                             <div>
                                                 <span class="font-medium">NIK:</span> {{ $member['nik'] ?? 'N/A' }} |
-                                                <span class="font-medium">Nama:</span> {{ $member['name'] ?? 'N/A' }} |
-                                                <span class="font-medium">Status:</span> {{ $member['shdk'] ?? 'N/A' }}
+                                                <span class="font-medium">Nama:</span> {{ $member['name'] ?? 'N/A' }}
+                                                |
+                                                <span class="font-medium">Status:</span>
+                                                {{ $member['shdk'] ?? 'N/A' }}
                                             </div>
                                             <button type="button"
                                                 wire:click.prevent="removeFamilyMember({{ $index }})"
