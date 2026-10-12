@@ -18,72 +18,80 @@ class Poverty extends Component
     public $letters;
     public $isModalOpen = false;
     public $modalImage;
+    public string $search = '';
+
+    public int $perPage = 10;
+    public ?string $cursor = null;
+    public ?string $prevCursor = null;
+    public ?string $nextCursor = null;
+
+    public function updatingSearch()
+    {
+        $this->cursor = null;
+    }
+
+    public function goto(?string $cursor = null)
+    {
+        $this->cursor = $cursor ?: null;
+    }
+
     public function render()
     {
-        // Fetch only the requests where status_id is 4 (assuming 'status_id' is the column for status)
-        $requests = Request::whereHas('typeLetter', function ($query) {
-            $query->where('name', 'Surat Keterangan Tidak Mampu');
-        })
-            ->where('request_status_id', 5)  // Filter by status_id being 5
-            ->get();
+        $base = Request::query()
+            ->with(['povertyLetter', 'typeLetter', 'user'])
+            ->whereHas('typeLetter', fn($q) => $q->where('name', 'Surat Keterangan Tidak Mampu'))
+            ->where('request_status_id', 5)
+            ->when($this->search !== '', function ($q) {
+                $term = '%' . $this->search . '%';
+                $q->where(function ($sub) use ($term) {
+                    $sub->whereHas('povertyLetter', function ($p) use ($term) {
+                        $p->where('name', 'like', $term)
+                            ->orWhere('number_letter', 'like', $term);
+                    })
+                        ->orWhereHas('user', fn($u) => $u->where('name', 'like', $term))
+                        ->orWhere('id', 'like', $term);
+                });
+            })
+            ->orderBy('created_at', 'desc');
+
+        $paginator = $base->cursorPaginate($this->perPage, ['*'], 'cursor', $this->cursor);
+        $this->prevCursor = optional($paginator->previousCursor())->encode();
+        $this->nextCursor = optional($paginator->nextCursor())->encode();
 
         return view('livewire.admin.letter.poverty', [
-            'requests' => $requests,
+            'requests' => $paginator,
         ]);
     }
+
     public function openModal($imageUrl)
     {
-        $this->modalImage = $imageUrl; // Set image URL
-        $this->isModalOpen = true;    // Open modal
+        $this->modalImage = $imageUrl;
+        $this->isModalOpen = true;
     }
 
     public function closeModal()
     {
-        $this->isModalOpen = false; // Close modal
+        $this->isModalOpen = false;
     }
+
     public function downloadPDF($id)
     {
-        //composer require barryvdh/laravel-dompdf
-        // Retrieve data for the document
         $povertyLetter = PovertyLetter::findOrFail($id);
-
-        // Generate HTML content
-        $htmlContent = view('pdf.poverty_letter', compact('poverty'))->render();
-
-        // Generate PDF using DomPDF
-        $pdf = Pdf::loadHTML($htmlContent)
-            ->setPaper('a4') // Set the paper size (optional)
-            ->setOption('isHtml5ParserEnabled', true) // Optional settings
-            ->setOption('isRemoteEnabled', true);     // Allow loading external CSS/JS (optional)
-
-        // Format nama surat untuk mencegah karakter tidak valid
-        $namaSurat = Str::slug($povertyLetter->name); // Menggunakan slug agar aman untuk nama file
-        // Return the PDF as a download
+        $htmlContent = view('pdf.poverty_letter', ['poverty' => $povertyLetter])->render();
+        $pdf = Pdf::loadHTML($htmlContent)->setPaper('a4')->setOption('isHtml5ParserEnabled', true)->setOption('isRemoteEnabled', true);
+        $namaSurat = Str::slug($povertyLetter->name);
         $pdfFileName = "Surat Keterangan Tidak Mampu | {$namaSurat}.pdf";
         return $pdf->download($pdfFileName);
     }
 
     public function streamPDF($id)
     {
-        // Retrieve data for the document
         $povertyLetter = PovertyLetter::findOrFail($id);
-
-        // Generate PDF using DomPDF
-        $pdf = Pdf::loadView('pdf.poverty_letter', ['poverty' => $povertyLetter])
-            ->setPaper('a4') // Set the paper size (optional)
-            ->setOption('isHtml5ParserEnabled', true) // Optional settings
-            ->setOption('isRemoteEnabled', true);     // Allow loading external CSS/JS (optional)
-
-        // Format nama surat untuk mencegah karakter tidak valid
-        $namaSurat = Str::slug($povertyLetter->name); // Menggunakan slug agar aman untuk nama file
-        // Save the PDF to a specific directory
+        $pdf = Pdf::loadView('pdf.poverty_letter', ['poverty' => $povertyLetter])->setPaper('a4')->setOption('isHtml5ParserEnabled', true)->setOption('isRemoteEnabled', true);
+        $namaSurat = Str::slug($povertyLetter->name);
         $pdfFileName = "Surat-Keterangan-Tidak-Mampu-{$namaSurat}.pdf";
-        // Simpan file ke dalam folder 'storage/app/public/pdf'
         $filePath = storage_path("app/public/pdf/{$pdfFileName}");
         $pdf->save($filePath);
-
-
-        // Stream the PDF to the browser
         return $pdf->stream();
     }
 }

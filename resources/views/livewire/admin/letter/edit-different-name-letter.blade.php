@@ -8,7 +8,7 @@
     @endif
 
     <form wire:submit.prevent="update">
-        @foreach ([['number_letter', 'Nomor Surat', 'number'], ['name', 'Nama', 'text'], ['same_name', 'Nama yang Sama', 'text'], ['nik', 'NIK', 'number'], ['birth_date', 'Tanggal Lahir', 'date'], ['nationality', 'Kewarganegaraan', 'text'], ['religion', 'Agama', 'text'], ['occupation', 'Pekerjaan', 'text'], ['address', 'Alamat', 'textarea']] as $field)
+        @foreach ([['number_letter', 'Nomor Surat', 'text'], ['name', 'Nama', 'text'], ['same_name', 'Nama yang Sama', 'text'], ['nik', 'NIK', 'number'], ['birth_date', 'Tanggal Lahir', 'date'], ['nationality', 'Kewarganegaraan', 'text'], ['religion', 'Agama', 'text'], ['occupation', 'Pekerjaan', 'text'], ['address', 'Alamat', 'textarea']] as $field)
             <div class="mb-4">
                 <label for="{{ $field[0] }}"
                     class="block text-sm font-medium text-gray-700">{{ $field[1] }}</label>

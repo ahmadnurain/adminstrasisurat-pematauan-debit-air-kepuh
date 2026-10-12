@@ -19,103 +19,102 @@ class MovingComesOneVillage extends Component
     public $letters;
     public $isModalOpen = false;
     public $modalImage;
+    public string $search = '';
     public $familyMemberFields = [
         ['name' => 'nik', 'label' => 'NIK', 'type' => 'number', 'placeholder' => 'Masukkan NIK'],
         ['name' => 'name', 'label' => 'Nama', 'type' => 'text', 'placeholder' => 'Masukkan Nama'],
         ['name' => 'shdk', 'label' => 'Status Hubungan Keluarga', 'type' => 'text', 'placeholder' => 'Masukkan Status'],
-    ];  // Define the family member fields
-    public $familyMembers = [];  // Store family members
+    ];
+    public $familyMembers = [];
+
+    public int $perPage = 10;
+    public ?string $cursor = null;
+    public ?string $prevCursor = null;
+    public ?string $nextCursor = null;
+
+    public function updatingSearch()
+    {
+        $this->cursor = null;
+    }
+
+    public function goto(?string $cursor = null)
+    {
+        $this->cursor = $cursor ?: null;
+    }
+
     public function render()
     {
-        // Fetch only the requests where status_id is 4 (assuming 'status_id' is the column for status)
-        $requests = Request::whereHas('typeLetter', function ($query) {
-            $query->where('name', 'Surat Pindah Datang Dalam satu Desa');
-        })
-            ->where('request_status_id', 5)  // Filter by status_id being 5
-            ->get();
+        $base = Request::query()
+            ->with(['MovingComesInOneVillageLetter', 'typeLetter', 'user'])
+            ->whereHas('typeLetter', fn($q) => $q->where('name', 'Surat Pindah Datang Dalam satu Desa'))
+            ->where('request_status_id', 5)
+            ->when($this->search !== '', function ($q) {
+                $term = '%' . $this->search . '%';
+                $q->where(function ($sub) use ($term) {
+                    $sub->whereHas('MovingComesInOneVillageLetter', function ($m) use ($term) {
+                        $m->where('applicant_full_name', 'like', $term)
+                            ->orWhere('number_letter', 'like', $term);
+                    })
+                        ->orWhereHas('user', fn($u) => $u->where('name', 'like', $term))
+                        ->orWhere('id', 'like', $term);
+                });
+            })
+            ->orderBy('created_at', 'desc');
+
+        $paginator = $base->cursorPaginate($this->perPage, ['*'], 'cursor', $this->cursor);
+        $this->prevCursor = optional($paginator->previousCursor())->encode();
+        $this->nextCursor = optional($paginator->nextCursor())->encode();
 
         return view('livewire.admin.letter.moving-comes-one-village', [
-            'requests' => $requests,
+            'requests' => $paginator,
         ]);
     }
 
-    // Method to add a family member
     public function addFamilyMember()
     {
-        $this->familyMembers[] = [
-            'nik' => '',
-            'name' => '',
-            'shdk' => '',
-        ];
+        $this->familyMembers[] = ['nik' => '', 'name' => '', 'shdk' => ''];
     }
 
-    // Method to remove a family member
     public function removeFamilyMember($index)
     {
         unset($this->familyMembers[$index]);
-        $this->familyMembers = array_values($this->familyMembers);  // Reindex array
+        $this->familyMembers = array_values($this->familyMembers);
     }
+
     public function openModal($imageUrl)
     {
-        $this->modalImage = $imageUrl; // Set image URL
-        $this->isModalOpen = true;    // Open modal
+        $this->modalImage = $imageUrl;
+        $this->isModalOpen = true;
     }
 
     public function closeModal()
     {
-        $this->isModalOpen = false; // Close modal
+        $this->isModalOpen = false;
     }
+
     public function downloadPDF($id)
     {
-        //composer require barryvdh/laravel-dompdf
-        // Retrieve data for the document
         $MovingComesInOneVillageLetter = MovingComesInOneVillage::findOrFail($id);
-
-        // Ambil data keluarga berdasarkan request_id
         $familyMembers = Family::where('request_id', $MovingComesInOneVillageLetter->request_id)->get();
-
-        // Generate HTML content
         $htmlContent = view('pdf.MovingComesInOneVillage_letter', compact('MovingComesInOneVillageLetter', 'familyMembers'))->render();
-
-        // Generate PDF using DomPDF
-        $pdf = Pdf::loadHTML($htmlContent)
-            ->setPaper('a4') // Set the paper size (optional)
-            ->setOption('isHtml5ParserEnabled', true) // Optional settings
-            ->setOption('isRemoteEnabled', true);     // Allow loading external CSS/JS (optional)
-
+        $pdf = Pdf::loadHTML($htmlContent)->setPaper('a4')->setOption('isHtml5ParserEnabled', true)->setOption('isRemoteEnabled', true);
         $namaSurat = Str::slug($MovingComesInOneVillageLetter->applicant_full_name);
-
-        // Return the PDF as a download
         $pdfFileName = "Surat Pindah Datang Dalam Satu Desa | {$namaSurat}.pdf";
         return $pdf->download($pdfFileName);
     }
 
     public function streamPDF($id)
     {
-        // Retrieve data for the document
         $MovingComesInOneVillageLetter = MovingComesInOneVillage::findOrFail($id);
-
-        // Ambil data keluarga berdasarkan request_id
         $familyMembers = Family::where('request_id', $MovingComesInOneVillageLetter->request_id)->get();
-        // Generate PDF using DomPDF
-        // Kirim data surat dan keluarga ke view PDF
         $pdf = Pdf::loadView('pdf.MovingComesInOneVillage_letter', [
             'MovingComesInOneVillageLetter' => $MovingComesInOneVillageLetter,
-            'familyMembers' => $familyMembers // Tambahkan variabel ini
-        ])
-            ->setPaper('a4') // Set the paper size (optional)
-            ->setOption('isHtml5ParserEnabled', true) // Optional settings
-            ->setOption('isRemoteEnabled', true);     // Allow loading external CSS/JS (optional)
-
+            'familyMembers' => $familyMembers
+        ])->setPaper('a4')->setOption('isHtml5ParserEnabled', true)->setOption('isRemoteEnabled', true);
         $namaSurat = Str::slug($MovingComesInOneVillageLetter->applicant_full_name);
-
-        // Save the PDF to a specific directory
         $pdfFileName = "Surat-Pindah-Datang-Dalam-Satu-Desa-{$namaSurat}.pdf";
         $filePath = storage_path('app/public/pdf/' . $pdfFileName);
         $pdf->save($filePath);
-
-
-        // Stream the PDF to the browser
         return $pdf->stream();
     }
 }

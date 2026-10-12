@@ -2,40 +2,44 @@
 
 
 
-use App\Http\Controllers\Admin\DomicileController;
-use App\Livewire\Admin\AdminRequestComponent;
-use App\Livewire\Admin\Letter\BirthLetter;
-use App\Livewire\Admin\Letter\BusinessLetter;
-use App\Livewire\Admin\Letter\DifferentNameLetter;
-use App\Livewire\Admin\Letter\EditBirthLetter;
-use App\Livewire\Admin\Letter\EditBusinessLetter;
-use App\Livewire\Admin\Letter\EditDifferentNameLetter;
-use App\Livewire\Admin\Letter\EditDomicile;
-use App\Livewire\Admin\Letter\EditIncomeLetter;
-use App\Livewire\Admin\Letter\EditMaritalStatusLetter;
-use App\Livewire\Admin\Letter\EditMovingBetweenVillages;
-use App\Livewire\Admin\Letter\EditMovingComesOneVillage;
-use App\Livewire\Admin\Letter\EditSingleStatusLetter;
-use App\Livewire\Admin\Letter\MaritalStatusLetter;
-use App\Livewire\Admin\Letter\MovingBetweenVillages;
-use App\Livewire\Admin\Letter\MovingComesOneVillage;
-use App\Livewire\Admin\Letter\Poverty;
-use App\Livewire\Admin\Letter\SingleStatusLetter;
+use App\Livewire\Index;
+use Livewire\Volt\Volt;
+use App\Models\VillageLetter;
+use App\Livewire\Admin\WaterDebit;
 use App\Livewire\DomicileLetterPdf;
 use App\Livewire\Admin\RequestIndex;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Admin\UserRequestComponent;
+use App\Livewire\Admin\Letter\Poverty;
 use App\Livewire\Admin\Letter\Domicile;
-use App\Http\Controllers\DashboardController;
-use App\Livewire\Admin\Letter\EditPoverty;
-use App\Livewire\Admin\Letter\EditVillageLetter;
-use App\Livewire\Admin\Letter\IncomeLetter;
-use App\Livewire\Admin\WaterDebit;
-use App\Livewire\Index;
 use App\Livewire\User\RequestDashboard;
-use App\Models\VillageLetter;
+use App\Livewire\Admin\Letter\BirthLetter;
+use App\Livewire\Admin\Letter\EditPoverty;
+use App\Livewire\Admin\Letter\EditDomicile;
+use App\Livewire\Admin\Letter\IncomeLetter;
+use App\Livewire\Admin\UserRequestComponent;
+use App\Http\Controllers\DashboardController;
+use App\Livewire\Admin\AdminRequestComponent;
+use App\Livewire\Admin\Letter\BusinessLetter;
+use App\Livewire\Admin\Account\ChangePassword;
+use App\Livewire\Admin\Letter\EditBirthLetter;
+use App\Livewire\Admin\Letter\EditIncomeLetter;
+use App\Livewire\Admin\Letter\EditVillageLetter;
+use App\Livewire\Admin\Letter\EditBusinessLetter;
+use App\Livewire\Admin\Letter\SingleStatusLetter;
+use App\Http\Controllers\Admin\DomicileController;
+use App\Livewire\Admin\Letter\DifferentNameLetter;
+use App\Livewire\Admin\Letter\MaritalStatusLetter;
+use App\Livewire\Admin\Letter\MovingBetweenVillages;
+use App\Livewire\Admin\Letter\MovingComesOneVillage;
+use App\Livewire\Admin\Letter\EditSingleStatusLetter;
+use App\Livewire\Admin\Letter\EditDifferentNameLetter;
+use App\Livewire\Admin\Letter\EditMaritalStatusLetter;
+use App\Livewire\Admin\Letter\EditMovingBetweenVillages;
+use App\Livewire\Admin\Letter\EditMovingComesOneVillage;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/account/password', ChangePassword::class,)
+        ->name('change-password');
     // Route untuk halaman permintaan surat
     Route::get('request', RequestIndex::class)->name('request');
     Route::get('request-letter', AdminRequestComponent::class)->name('request.letter');

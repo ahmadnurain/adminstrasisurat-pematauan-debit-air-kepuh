@@ -25,7 +25,7 @@
 </head>
 
 <body class="font-sans antialiased">
-    <livewire:layout.header />
+    <livewire:layout.header>
     <main>
         {{ $slot }}
     </main>
